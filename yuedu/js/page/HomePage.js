@@ -3,17 +3,25 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import NavigatorUtil from '../navigator/NavigatorUtil';
 import DynamicTabNavigator from '../navigator/DynamicTabNavigator';
+import SafeAreaViewPlus from '../common/SafeAreaViewPlus';
+import GlobalStyles from "../res/styles/GlobalStyles";
+export default class HomePage extends React.Component {
 
-export default class HomePage extends React.Component{
-
-    constructor(props){
+    constructor(props) {
         super(props);
-       
+
     }
-    render(){
+    render() {
         NavigatorUtil.navigation = this.props.navigation;
-       
-        return(<DynamicTabNavigator/>);
+
+        return (
+            <SafeAreaViewPlus
+                topColor={GlobalStyles.theme.themeColor}
+            >
+                <DynamicTabNavigator />
+            </SafeAreaViewPlus>
+
+        );
     }
 }
 

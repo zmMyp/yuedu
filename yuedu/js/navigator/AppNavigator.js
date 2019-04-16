@@ -17,12 +17,14 @@ const InitNavigator=createStackNavigator({
 });
 
 const MainNavigator=createStackNavigator({
-    HomePage:{
+    HomePage:{// Home中又使用了Tab导航
         screen: HomePage,
         navigationOptions:{
-            headerStyle: {
-               height: 0 //适配x,把标题栏高度设为0
-            }
+            // headerStyle: {
+            //    height: 0 //适配x,把标题栏高度设为0
+            // }
+            header: null // 通过设置header null 可以把头部去掉
+            
         }
     },
     DetailPage:{
@@ -33,16 +35,7 @@ const MainNavigator=createStackNavigator({
     }
 });
 
-// const SwitchNavigator=createSwitchNavigator({
-//     Init:InitNavigator,
-//     Main: MainNavigator,
-//     },{
-//     navigationOptions:{
-//         header: null
-//     }
-// });
 
-//export const RootNavigator= createAppContainer(SwitchNavigator);
 
 export const RootNavigator=createSwitchNavigator({
         Init:InitNavigator,

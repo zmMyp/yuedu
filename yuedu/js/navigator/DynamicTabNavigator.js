@@ -9,8 +9,9 @@ import PopularPage from '../page/hometab/PopularPage';
 import FavoritorPage from '../page/hometab/FavoritorPage';
 import MinePage from '../page/hometab/MinePage';
 import TrendingPage from '../page/hometab/TrendingPage';
+import WebViewPage from '../page/WebViewPage';
 import NavigatorUtil from '../navigator/NavigatorUtil';
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import { BottomTabBar } from 'react-navigation-tabs';
 
 // 定义配置的底部tab
@@ -18,7 +19,7 @@ const TABS = {
     PopularPage: {
         screen: PopularPage,
         navigationOptions: {
-            tabBarLabel: "最热",
+            tabBarLabel: "github",
             tabBarIcon: ({ tintColor, focused }) => {
                 return <MaterialIcons
                     name={"whatshot"}
@@ -29,30 +30,50 @@ const TABS = {
         }
     },
     TrendingPage: {
-        screen: TrendingPage,
-        navigationOptions: {
-            tabBarLabel: "趋势",
+        screen: WebViewPage,
+        navigationOptions: ({ navigation }) => ({
+            tabBarLabel: "知乎",
             tabBarIcon: ({ tintColor, focused }) => {
                 return <Ionicons
                     name={"md-trending-up"}
                     size={26}
                     style={{ color: tintColor }}
                 />
+            },
+            tabBarOnPress: () => { // 使用tabBarOnPress点击事件来传递参数给下一页
+                if (!navigation.isFocused()) {
+                    // 路由方法, 动态跳转到对应界面
+                    navigation.navigate(navigation.state.routeName, {
+                        uri: "https://www.zhihu.com",
+                        title: '知乎'
+                    })
+                }
             }
-        }
+
+        })
     },
     FavoritorPage: {
-        screen: FavoritorPage,
-        navigationOptions: {
-            tabBarLabel: "收藏",
+        screen: WebViewPage,
+        navigationOptions: ({ navigation }) => ({
+            tabBarLabel: "掘金",
             tabBarIcon: ({ tintColor, focused }) => {
                 return <MaterialIcons
                     name={"favorite"}
                     size={26}
                     style={{ color: tintColor }}
                 />
+            },
+            tabBarOnPress: () => { // 使用tabBarOnPress点击事件
+                if (!navigation.isFocused()) {
+                    // 路由方法, 动态跳转到对应界面
+                    navigation.navigate(navigation.state.routeName, {
+                        uri: "https://juejin.im",
+                        title: '掘金'
+                    })
+                }
             }
-        }
+        }),
+
     },
     MinePage: {
         screen: MinePage,
