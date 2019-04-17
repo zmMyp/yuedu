@@ -4,7 +4,7 @@ import { createBottomTabNavigator, createAppContainer } from 'react-navigation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
-
+import GlobalStyles from '../res/styles/GlobalStyles'
 import PopularPage from '../page/hometab/PopularPage';
 import FavoritorPage from '../page/hometab/FavoritorPage';
 import MinePage from '../page/hometab/MinePage';
@@ -112,7 +112,7 @@ class DynamicTabNavigator extends React.Component {
         //记录顶层的导航，便于后面的子导航使用
         const TabNav = createBottomTabNavigator(this._tabNavigator(), {
             tabBarComponent: props => {
-                return <TabBarComponent theme={this.props.theme} {...props} />
+                return <TabBarComponent theme={GlobalStyles.theme.themeColor} {...props} />
             }
         });
         const HomeTabContainer = createAppContainer(TabNav);

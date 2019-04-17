@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View,Button ,AlertIOS} from 'react-native';
 import{createMaterialTopTabNavigator,createAppContainer,SafeAreaView} from 'react-navigation'
 import NavigatorUtil from '../../../js/navigator/NavigatorUtil';
-import PopularTab from '../hometab/tab/PopularTab';
+import PopularTabPage from '../hometab/tab/PopularTab';
 
 export default class PopularPage extends React.Component{
    
     constructor(props){
         super(props)
         console.disableYellowBox=true;//去掉黄色警告
-        this.tableNames=['Java', 'Android', 'iOS', 'React', 'React Native', 'PHP'];
+        this.tableNames=['React Native','Android','Java',  'iOS', 'React', , 'PHP'];
      }
 
      // 创建tabs
@@ -18,7 +18,7 @@ export default class PopularPage extends React.Component{
         //遍历数组，在tabs中拼接配置tab
         this.tableNames.forEach((item, index) => {
             tabs[`tab${index}`] = {
-                screen: props => <PopularTab {...props} tabLabel={item}/>,
+                screen: props => <PopularTabPage {...props} tabLabel={item}/>,
                 navigationOptions: {
                     title: item
                 }
@@ -41,7 +41,7 @@ export default class PopularPage extends React.Component{
                 },
                 indicatorStyle: styles.indicatorStyle,//标签指示器的样式
                 labelStyle: styles.labelStyle,//文字的样式
-            }
+            }, lazy: true
          });
         //包裹导航    
         PopularAppContainer=createAppContainer(TopBarNav);
