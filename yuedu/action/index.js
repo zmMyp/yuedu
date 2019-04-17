@@ -1,6 +1,7 @@
 import{onThemeChange} from './theme';
-import{onRefreshPopular} from './popular';
+import{onRefreshPopular,onLoadMorePopular} from './popular';
 export default{
     onThemeChange,
-    onRefreshPopular
+    onRefreshPopular,
+    onLoadMorePopular
 }

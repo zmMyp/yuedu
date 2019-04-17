@@ -7,12 +7,14 @@ import DataStore from '../../../dao/DataStore';
 import actions from '../../../../action/index';
 import { connect } from 'react-redux';
 import GlobalStyles from '../../../res/styles/GlobalStyles';
-
-
+import Toast from 'react-native-easy-toast'
+import EventBus from "react-native-event-bus";
+import EventTypes from '../../../dao/event/EventTypes';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
-
+const page_size = 8;// 默认8条
+const page = 1;// 默认从第一页开始
 /**
  * 最热页面
  */
@@ -29,7 +31,13 @@ class PopularTab extends React.Component {
 
     componentDidMount() {
         // 挂载好后加载数据
-        this.props.onRefreshPopular(this.url,this.key);
+        this.props.onRefreshPopular(this.url, this.key, page_size);
+        EventBus.getInstance().addListener(EventTypes.bottom_tab_select, this.bottomTabSelectListener = (data) => {
+            this.props.onRefreshPopular(this.url, this.key, page_size);
+        })
+    }
+    componentWillUnmount(){
+        EventBus.getInstance().removeListener(this.bottomTabSelectListener);
     }
     genFetchUrl(key) {
         return URL + key + QUERY_STR;
@@ -45,9 +53,12 @@ class PopularTab extends React.Component {
         let store = popular[this.key];
         if (!store) {
             store = {
+                allItems: [],
                 items: [],
+                page: 1,
                 isLoading: false,
                 hideLoadingMore: true,//默认隐藏加载更多
+
             }
         }
         return store;
@@ -58,13 +69,21 @@ class PopularTab extends React.Component {
             item={item.item}
         />)
     }
-
+    genIndicator() {
+        return this._store().hideLoadingMore ? null :
+            <View style={styles.indicatorContainer}>
+                <ActivityIndicator
+                    style={styles.indicator}
+                />
+                <Text>正在加载更多</Text>
+            </View>
+    }
     render() {
         const { navigation } = this.props;
         const { state } = navigation;
         const { key } = state;
         let store = this._store();
-        console.log(key + "-->" + JSON.stringify(store.items));
+       
         // <Text >{key}</Text>
         //<Text >{this.props.tabLabel}</Text>
         return (
@@ -79,10 +98,38 @@ class PopularTab extends React.Component {
                             titleColor={GlobalStyles.theme.themeColor}
                             colors={[GlobalStyles.theme.themeColor]}
                             refreshing={store.isLoading}
-                            onRefresh={() => this.props.onRefreshPopular(this.url,this.key)}
+                            onRefresh={() => this.props.onRefreshPopular(this.url, this.key,page_size)}
                             tintColor={GlobalStyles.theme.themeColor}
                         />
                     }
+                    ListFooterComponent={() => this.genIndicator()}
+                    onEndReached={() => {
+                        console.log('onEndReached')
+                        setTimeout(() => {
+
+                            if (this.canLoadMore) {//fix 滚动时两次调用onEndReached https://github.com/facebook/react-native/issues/14015
+
+                                this.props.onLoadMorePopular(this.url,
+                                    this.key,
+                                    store.allItems,
+                                    page_size,
+                                    store.page,
+                                    () => { this.refs.toast.show('没有更多了') })
+
+                                this.canLoadMore = false;
+                            }
+                        }, 100);
+                    }}
+                    onEndReachedThreshold={0.5}
+                    onScrollBeginDrag={() => {
+                        console.log('onScrollBeginDrag')
+                        //https://www.jianshu.com/p/bf8cca0fc377  参考博客
+                        this.canLoadMore = true; //fix 初始化时页调用onEndReached的问题
+
+                    }}
+                />
+                <Toast ref={'toast'}
+                    position={'center'}
                 />
             </View>
         )
@@ -95,7 +142,8 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
 
-    onRefreshPopular: (url,key) => dispatch(actions.onRefreshPopular(url,key)),
+    onRefreshPopular: (url, key, page_size) => dispatch(actions.onRefreshPopular(url, key, page_size)),
+    onLoadMorePopular: (url, key, allItems, page_size, page, callback) => dispatch(actions.onLoadMorePopular(url, key, allItems, page_size, page, callback)),
 });
 
 //注意：connect只是个function，并不应定非要放在export后面
@@ -107,4 +155,11 @@ const styles = StyleSheet.create({
         flex: 1,
 
     },
+    indicatorContainer: {
+        alignItems: "center"
+    },
+    indicator: {
+        color: 'red',
+        margin: 10
+    }
 })

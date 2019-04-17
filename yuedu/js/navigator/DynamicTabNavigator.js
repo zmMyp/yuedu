@@ -13,7 +13,8 @@ import WebViewPage from '../page/WebViewPage';
 import NavigatorUtil from '../navigator/NavigatorUtil';
 import { connect } from "react-redux";
 import { BottomTabBar } from 'react-navigation-tabs';
-
+import EventBus from 'react-native-event-bus'
+import EventTypes from '../dao/event/EventTypes';
 // 定义配置的底部tab
 const TABS = {
     PopularPage: {
@@ -108,6 +109,8 @@ class DynamicTabNavigator extends React.Component {
         //PopularPage.navigationOptions.tabBarLabel = '哈哈';//动态配置Tab属性
         return tabs;
     }
+
+    
     render() {
         //记录顶层的导航，便于后面的子导航使用
         const TabNav = createBottomTabNavigator(this._tabNavigator(), {
@@ -115,9 +118,10 @@ class DynamicTabNavigator extends React.Component {
                 return <TabBarComponent theme={GlobalStyles.theme.themeColor} {...props} />
             }
         });
-        const HomeTabContainer = createAppContainer(TabNav);
 
-        return (<HomeTabContainer />);
+        HomeTabContainer = createAppContainer(TabNav);
+
+       return <HomeTabContainer/>
     }
 }
 
