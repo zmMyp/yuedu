@@ -11,7 +11,7 @@ export default class PopularPage extends React.Component {
     constructor(props) {
         super(props)
         console.disableYellowBox = true;//去掉黄色警告
-        this.tableNames = ['React Native', 'Android', 'Java', 'iOS', 'React', , 'PHP'];
+        this.tableNames = ['React Native', 'React','Android', 'Java', 'iOS' , 'PHP'];
     }
 
     // 创建tabs
@@ -43,7 +43,7 @@ export default class PopularPage extends React.Component {
                 },
                 indicatorStyle: styles.indicatorStyle,//标签指示器的样式
                 labelStyle: styles.labelStyle,//文字的样式
-            }, lazy: true
+            }
         });
         //包裹导航    
         PopularAppContainer = createAppContainer(TopBarNav);

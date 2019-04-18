@@ -51,7 +51,8 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0.5, height: 0.5 },
         shadowOpacity: 0.4,
         shadowRadius: 1,
-        elevation: 2
+        elevation: 2,
+        height: 120
     },
     row: {
         flex: 1,

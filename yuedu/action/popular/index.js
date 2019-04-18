@@ -56,10 +56,6 @@ export function onLoadMorePopular(url, key,allItems,page_size,page,callback) {
             //截取对应页码的数据
             let items=[];
             items=(page+1)*page_size<allItems.length?allItems.slice(0,(page+1)*page_size):allItems;
-            
-            if((page)*page_size>=allItems.length&&typeof callback === 'function'){
-                callback();
-            }
             dispatch({ 
                 type: Types.POPULAR_LOAD_MORE_SUCCESS, 
                 key:key,
@@ -67,6 +63,10 @@ export function onLoadMorePopular(url, key,allItems,page_size,page,callback) {
                 items:items,
                 page: page+1
              })
+            if((page)*page_size>=allItems.length&&typeof callback === 'function'){
+                callback();
+            }
+            
 
         }, 1000);
     }
